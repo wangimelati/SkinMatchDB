@@ -4,7 +4,23 @@ const { getProduct } = require('../controllers/prodController'); // Pastikan nam
 
 const router = express.Router();
 
-// Menggunakan parameter dinamis untuk ID produk dalam URL
-router.get('/detail-product/:productId', prodMiddleware, getProduct);
+router.get('/:productId', prodMiddleware, (req, res) => {
+    try {
+        // Mengembalikan detail produk dari data yang telah disimpan dalam req oleh middleware
+        const productData = req.productData;
+
+        // Mengembalikan detail produk dalam respons JSON
+        res.status(200).json({
+            status: "success",
+            data: productData
+        });
+    } catch (error) {
+        console.error("Error handling product details:", error);
+        res.status(500).json({
+            status: "error",
+            message: "Internal Server Error"
+        });
+    }
+});
 
 module.exports = router;
